@@ -66,4 +66,14 @@ occs.stats <-  as_tibble(occs.shp) %>% group_by(rid_grid) %>%
 
 grid.shp %<>% left_join(occs.stats, by = c("rid"="rid_grid"))
 
+
 st_write(grid.shp, paste0(wd,"grid_stats.shp"))
+
+
+# count cells with identical counts
+grid.cellsStats <-  as_tibble(grid.shp) %>% ungroup() %>% group_by(speciesCount) %>% 
+  mutate(cellsCount = n()) %>% 
+  slice_head() %>% ungroup() %>% 
+  dplyr::select(cellsCount, speciesCount, -geometry)
+
+write_csv(grid.cellsStats, paste0(wd, "grid_cellStats.csv"))
