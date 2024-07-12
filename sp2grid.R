@@ -73,7 +73,8 @@ st_write(grid.shp, paste0(wd,"grid_stats.shp"))
 # count cells with identical counts
 grid.cellsStats <-  as_tibble(grid.shp) %>% ungroup() %>% group_by(speciesCount) %>% 
   mutate(cellsCount = n()) %>% 
+  mutate(cellsPct =  cellsCount * 100 / nrow(grid.shp)) %>% 
   slice_head() %>% ungroup() %>% 
-  dplyr::select(cellsCount, speciesCount, -geometry)
+  dplyr::select(cellsCount, speciesCount, cellsPct, -geometry)
 
 write_csv(grid.cellsStats, paste0(wd, "grid_cellStats.csv"))
